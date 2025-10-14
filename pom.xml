@@ -23,14 +23,15 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
-		<javafx.version>21.0.8</javafx.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<javafx.version>17.0.16</javafx.version>
 		<jpro.version>2024.4.0</jpro.version>
 		<mainclass>io.github.magwas.testfx.HelloWorldButton</mainclass>
 		<mainmodule>io.github.magwas.testfx/HelloWorldButton</mainmodule>
 		<jpackageInputDirectory>${project.build.directory}/jpackage-input</jpackageInputDirectory>
-<gluonfx.plugin.version>1.0.27</gluonfx.plugin.version>	</properties>
+		<gluonfx.plugin.version>1.0.27</gluonfx.plugin.version>
+	</properties>
 	<repositories>
 		<repository>
 			<id>jpro-sandec-repository</id>
@@ -118,7 +119,7 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>linux-x86_64</id>
+			<id>linux</id>
 			<activation>
 				<os>
 					<name>linux</name>
@@ -188,21 +189,96 @@
 							</dependency>
 						</dependencies>
 					</plugin>
-            <plugin>
-                <groupId>com.gluonhq</groupId>
-                <artifactId>gluonfx-maven-plugin</artifactId>
-                <version>${gluonfx.plugin.version}</version>
-                <configuration>
-                    <mainClass>${mainclass}</mainClass>
-                    <target>android</target>
-                    <attachList>
-                        <list>display</list>
-                        <list>lifecycle</list>
-                        <list>statusbar</list>
-                        <list>storage</list>
-                    </attachList>
-                </configuration>
-            </plugin>				</plugins>
+					<plugin>
+						<groupId>com.gluonhq</groupId>
+						<artifactId>gluonfx-maven-plugin</artifactId>
+						<version>${gluonfx.plugin.version}</version>
+						<configuration>
+							<mainClass>${mainclass}</mainClass>
+							<target>android</target>
+							<attachList>
+								<list>display</list>
+								<list>lifecycle</list>
+								<list>statusbar</list>
+								<list>storage</list>
+							</attachList>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.akman</groupId>
+						<artifactId>jpackage-maven-plugin</artifactId>
+						<version>0.1.5</version>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>jpackage</goal>
+								</goals>
+								<configuration>
+									<name>${project.artifactId}</name>
+									<appversion>${project.version}</appversion>
+									<copyright>${project.licenses}</copyright>
+									<description>${project.description}</description>
+									<licensefile>LICENSE</licensefile>
+									<modulepath>
+										<dependencysets>
+											<dependencyset>
+												<includeoutput>false</includeoutput>
+												<excludeautomatic>true</excludeautomatic>
+												<includes>
+													<!-- todo would it be better
+													to
+											fetch jmods and use them? -->
+													<include>
+														glob:**/javafx-*-linux.jar</include>
+												</includes>
+											</dependencyset>
+										</dependencysets>
+										<dirsets>
+											<dirset>
+												<directory>target</directory>
+												<includes>
+													<include>**/*</include>
+												</includes>
+												<excludes>
+													<exclude>**/*Test</exclude>
+												</excludes>
+												<followSymlinks>true</followSymlinks>
+											</dirset>
+										</dirsets>
+									</modulepath>
+									<addmodules>
+										<addmodule>javafx.controls</addmodule>
+									</addmodules>
+									<mainjar>testfx-${project.version}.jar</mainjar>
+									<mainclass>${mainclass}</mainclass>
+									<input>${jpackageInputDirectory}</input>
+									<verbose>true</verbose>
+									<javaoptions>--enable-preview</javaoptions>
+								</configuration>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>org.ow2.asm</groupId>
+								<artifactId>asm</artifactId>
+								<version>9.5</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+				</plugins>
 			</build>
 		</profile>
 	</profiles>
