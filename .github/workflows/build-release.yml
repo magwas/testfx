@@ -58,7 +58,7 @@ jobs:
 
       - name: Setup Gluon GraalVM
         run: |
-          GRAALVM_URL="https://github.com/gluonhq/graal/releases/download/graal-22.1.0.1-Final/graalvm-svm-java17-linux-gluon-22.1.0.1-Final.tar.gz"
+          GRAALVM_URL="https://github.com/gluonhq/graal/releases/download/gluon-22.1.0.1-Final/graalvm-svm-java17-linux-gluon-22.1.0.1-Final.tar.gz"
           wget -O graalvm.tar.gz $GRAALVM_URL
           tar -xzf graalvm.tar.gz
           echo "GRAALVM_HOME=$PWD/graalvm-svm-java17-linux-gluon-22.1.0.1-Final" >> $GITHUB_ENV
