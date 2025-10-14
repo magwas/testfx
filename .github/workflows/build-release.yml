@@ -43,11 +43,26 @@ jobs:
           retention-days: 1
 
   build-android:
-    name: Create Release
+    name: build android
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2-dev libavcodec-dev libavformat-dev \
+          libavutil-dev libfreetype6-dev libgl-dev libglib2.0-dev libgtk-3-dev \
+          libpango1.0-dev libx11-dev libxtst-dev
+
+      - name: Setup Gluon GraalVM
+        run: |
+          GRAALVM_URL="https://github.com/gluonhq/graal/releases/download/graal-22.1.0.1-Final/graalvm-svm-java17-linux-gluon-22.1.0.1-Final.tar.gz"
+          wget -O graalvm.tar.gz $GRAALVM_URL
+          tar -xzf graalvm.tar.gz
+          echo "GRAALVM_HOME=$PWD/graalvm-svm-java17-linux-gluon-22.1.0.1-Final" >> $GITHUB_ENV
+          echo "$PWD/graalvm-svm-java17-linux-gluon-22.1.0.1-Final/bin" >> $GITHUB_PATH
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -62,15 +77,6 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
-      - name: Setup GraalVM with JavaFX
-        uses: graalvm/setup-graalvm@v1
-        with:
-          # Using Liberica NIK distribution which includes JavaFX
-          distribution: 'liberica'
-          java-version: '17'
-          java-package: 'jdk+fx'  # Crucial for JavaFX support:cite[8]
-          cache: 'maven'  # Caches Maven dependencies for faster builds:cite[1]:cite[2]
 
       - name: Build with Maven
         run: |
