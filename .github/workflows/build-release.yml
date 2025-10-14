@@ -91,7 +91,8 @@ jobs:
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: build-native-installers, build-android
+    needs: build-native-installers
+    needs: build-android
     # Specifies the permissions for the GITHUB_TOKEN
     permissions:
       contents: write
