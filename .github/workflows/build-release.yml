@@ -84,6 +84,7 @@ jobs:
           echo "JAVA_HOME: $JAVA_HOME"
           java --version
           native-image --version
+          unset ANDROID_SDK_ROOT
           mvn -B clean gluonfx:build gluonfx:package
 
       - name: Upload built installer
