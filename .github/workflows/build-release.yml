@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         # Defines the operating systems for the build matrix
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
     
     steps:
       - name: Checkout repository
@@ -25,13 +25,13 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn --batch-mode clean package
+        run: mvn --batch-mode clean install
 
       - name: Upload built installer
         uses: actions/upload-artifact@v4
         with:
           name: installer-${{ matrix.os }}
-          path: target/jfx/native/
+          path: target/jpackage
           # Retains the artifact after the workflow run for the release job
           retention-days: 1
 
