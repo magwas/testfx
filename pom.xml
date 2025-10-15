@@ -79,9 +79,9 @@
 							<outputDirectory>
 								${jpackageInputDirectory}/lib
 							</outputDirectory>
-							<excludeGroupIds>
+							<!--excludeGroupIds>
 								org.openjfx
-							</excludeGroupIds>
+							</excludeGroupIds-->
 							<includeScope>
 								runtime
 							</includeScope>
@@ -242,7 +242,7 @@
 													to
 											fetch jmods and use them? -->
 													<include>
-														glob:**/javafx-*-linux.jar</include>
+														glob:**/javafx-*-win.jar</include>
 												</includes>
 											</dependencyset>
 										</dependencysets>
